@@ -156,6 +156,8 @@
         left: 0;
         border-bottom: 1px solid rgba(256, 256, 256, .2);
         z-index: 999;
+        padding-left: 45px;
+        padding-right: 45px;
     }
     
     .sticky-top.navbar {
@@ -217,7 +219,7 @@
 .hero-header {
     margin-bottom: 6rem;
     padding: 12rem 0 9rem 0;
-    background: url(../img/shape-bottom.png) center bottom no-repeat;
+   
 }
 
 .page-header {
