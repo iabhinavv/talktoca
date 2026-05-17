@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CA Anil K. Verma & Associates | Professional CA & Legal Consultancy</title>
+    
+    <!-- Performance Optimizations -->
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://unpkg.com">
+
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- React and ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel for in-browser JSX compilation -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        /* Base styles */
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        .animate-in { animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // --- MAIN APPLICATION COMPONENT ---
+        function App() {
+            const [currentPage, setCurrentPage] = useState('home');
+            const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+            const [scrolled, setScrolled] = useState(false);
+
+            // Handle scroll effect for navbar
+            useEffect(() => {
+                const handleScroll = () => {
+                    setScrolled(window.scrollY > 20);
+                };
+                window.addEventListener('scroll', handleScroll);
+                return () => window.removeEventListener('scroll', handleScroll);
+            }, []);
+
+            const navigateTo = (page) => {
+                setCurrentPage(page);
+                setIsMobileMenuOpen(false);
+                window.scrollTo(0, 0);
+            };
+
+            return (
+                <div className="min-h-screen bg-slate-50 font-sans text-slate-800 flex flex-col">
+                    {/* Navigation */}
+                    <nav className={`fixed w-full z-50 transition-all duration-300 ${scrolled ? 'bg-white shadow-md py-2' : 'bg-slate-900 py-4'}`}>
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <div className="flex justify-between items-center">
+                                {/* Logo */}
+                                <div 
+                                    className="flex items-center cursor-pointer" 
+                                    onClick={() => navigateTo('home')}
+                                >
+                                    <img 
+                                        src="img/3-modified.png" 
+                                        alt="CA Anil K. Verma & Associates Logo" 
+                                        className="w-12 h-12 mr-3 object-contain drop-shadow-md bg-white rounded-full p-1"
+                                        onError={(e) => {
+                                            e.target.onerror = null;
+                                            e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23f59e0b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 21h18'/%3E%3Cpath d='M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16'/%3E%3Cpath d='M9 21v-4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4'/%3E%3C/svg%3E";
+                                        }}
+                                    />
+                                    <span className={`text-lg md:text-xl font-bold tracking-tight leading-tight ${scrolled ? 'text-slate-900' : 'text-white'}`}>
+                                        CA Anil K. Verma <br className="md:hidden" /><span className="text-amber-500">& Associates</span>
+                                    </span>
+                                </div>
+
+                                {/* Desktop Menu */}
+                                <div className="hidden md:flex space-x-8 items-center">
+                                    {['Home', 'About', 'Services', 'Career', 'Blog', 'Contact'].map((item) => (
+                                        <button
+                                            key={item}
+                                            onClick={() => navigateTo(item.toLowerCase())}
+                                            className={`text-sm font-semibold transition-colors duration-200 ${
+                                                currentPage === item.toLowerCase()
+                                                    ? 'text-amber-500'
+                                                    : scrolled ? 'text-slate-600 hover:text-slate-900' : 'text-slate-300 hover:text-white'
+                                            }`}
+                                        >
+                                            {item}
+                                        </button>
+                                    ))}
+                                    <a 
+                                        href="tel:+919417121061"
+                                        className="bg-amber-500 hover:bg-amber-600 text-white px-5 py-2.5 rounded-md font-semibold transition-all shadow-md hover:shadow-lg"
+                                    >
+                                        TalkToCA
+                                    </a>
+                                </div>
+
+                                {/* Mobile Menu Button */}
+                                <div className="md:hidden flex items-center">
+                                    <button
+                                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                                        className={scrolled ? 'text-slate-900' : 'text-white'}
+                                    >
+                                        {isMobileMenuOpen ? <i className="fa-solid fa-xmark text-2xl"></i> : <i className="fa-solid fa-bars text-2xl"></i>}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Mobile Menu */}
+                        {isMobileMenuOpen && (
+                            <div className="md:hidden bg-white shadow-xl absolute top-full left-0 w-full border-t border-slate-100">
+                                <div className="px-4 pt-2 pb-6 space-y-2">
+                                    {['Home', 'About', 'Services', 'Career', 'Blog', 'Contact'].map((item) => (
+                                        <button
+                                            key={item}
+                                            onClick={() => navigateTo(item.toLowerCase())}
+                                            className={`block w-full text-left px-4 py-3 rounded-md text-base font-medium ${
+                                                currentPage === item.toLowerCase() ? 'bg-amber-50 text-amber-600' : 'text-slate-700 hover:bg-slate-50'
+                                            }`}
+                                        >
+                                            {item}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                    </nav>
+
+                    {/* Main Content Area */}
+                    <main className="flex-grow pt-16">
+                        {currentPage === 'home' && <HomePage navigateTo={navigateTo} />}
+                        {currentPage === 'about' && <AboutPage navigateTo={navigateTo} />}
+                        {currentPage === 'services' && <ServicesPage navigateTo={navigateTo} />}
+                        {currentPage === 'career' && <CareerPage />}
+                        {currentPage === 'blog' && <BlogPage />}
+                        {currentPage === 'contact' && <ContactPage />}
+                    </main>
+
+                    {/* Footer */}
+                    <footer className="bg-slate-900 text-slate-300 py-12 border-t border-slate-800">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8">
+                            <div className="space-y-4">
+                                <div className="flex items-center">
+                                    <div className="w-8 h-8 bg-amber-500 rounded flex items-center justify-center mr-2">
+                                        <i className="fa-solid fa-landmark text-white"></i>
+                                    </div>
+                                    <span className="text-lg md:text-xl font-bold text-white tracking-tight">CA Anil K. Verma & Associates</span>
+                                </div>
+                                <p className="text-sm text-slate-400">
+                                    India's premier digital financial and legal consultancy. Empowering startups and enterprises with international standard compliance and advisory.
+                                </p>
+                            </div>
+                            
+                            <div>
+                                <h3 className="text-white font-semibold mb-4 text-lg">Quick Links</h3>
+                                <ul className="space-y-2 text-sm">
+                                    {['Home', 'About Us', 'Our Services', 'Careers', 'Contact'].map((link, i) => (
+                                        <li key={i}>
+                                            <button onClick={() => navigateTo(link.split(' ')[0].toLowerCase())} className="hover:text-amber-400 transition-colors">
+                                                {link}
+                                            </button>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+
+                            <div>
+                                <h3 className="text-white font-semibold mb-4 text-lg">Services</h3>
+                                <ul className="space-y-2 text-sm">
+                                    <li>Startup Incorporation</li>
+                                    <li>GST & Taxation</li>
+                                    <li>Virtual CFO Services</li>
+                                    <li>Legal & ROC Compliance</li>
+                                    <li>Auditing & Assurance</li>
+                                </ul>
+                            </div>
+
+                            <div>
+                                <h3 className="text-white font-semibold mb-4 text-lg">Contact</h3>
+                                <ul className="space-y-3 text-sm">
+                                    <li className="flex items-start">
+                                        <i className="fa-solid fa-location-dot text-amber-500 mr-2 shrink-0 mt-1"></i>
+                                        <span>CA Anil K. Verma & Associates, SCO 118-19, 2nd Floor, Madhya Marg, sector 8C, Chandigarh</span>
+                                    </li>
+                                    <li className="flex items-start">
+                                        <i className="fa-solid fa-phone text-amber-500 mr-2 shrink-0 mt-1"></i>
+                                        <span>+91 9417121061<br/>0172 5061061</span>
+                                    </li>
+                                    <li className="flex items-center">
+                                        <i className="fa-solid fa-envelope text-amber-500 mr-2 shrink-0"></i>
+                                        <span>ca.akvandassociates@gmail.com</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 pt-8 border-t border-slate-800 text-sm text-center text-slate-500">
+                            <p>&copy; {new Date().getFullYear()} CA Anil K. Verma & Associates. All rights reserved.</p>
+                        </div>
+                    </footer>
+                </div>
+            );
+        }
+
+        // --- PAGE COMPONENTS ---
+
+        function HomePage({ navigateTo }) {
+            return (
+                <div className="animate-in">
+                    {/* Hero Section */}
+                    <section className="relative bg-slate-900 text-white overflow-hidden">
+                        <div className="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900"></div>
+                        
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28 relative z-10 flex flex-col md:flex-row items-center">
+                            <div className="md:w-1/2 space-y-8 pr-0 md:pr-8">
+                                <div className="inline-flex items-center px-3 py-1 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/30 text-sm font-semibold tracking-wide">
+                                    <span className="w-2 h-2 rounded-full bg-amber-500 mr-2 animate-pulse"></span>
+                                    India's Trusted CA Firm
+                                </div>
+                                <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight">
+                                    Global Standards.<br/>
+                                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-600">Indian Expertise.</span>
+                                </h1>
+                                <p className="text-lg text-slate-300 max-w-xl leading-relaxed">
+                                    Comprehensive financial, taxation, and legal consultancy for modern businesses. From seamless startup incorporation to complex corporate tax structuring.
+                                </p>
+                                <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                                    <a 
+                                        href="tel:+919417121061"
+                                        className="bg-amber-500 hover:bg-amber-600 text-white px-8 py-3.5 rounded-md font-bold text-lg transition-all shadow-lg shadow-amber-500/30 flex items-center justify-center group"
+                                    >
+                                        TalkToCA Now
+                                        <i className="fa-solid fa-phone ml-2 group-hover:scale-110 transition-transform"></i>
+                                    </a>
+                                    <button 
+                                        onClick={() => navigateTo('services')}
+                                        className="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white px-8 py-3.5 rounded-md font-bold text-lg transition-all flex items-center justify-center"
+                                    >
+                                        Explore Services
+                                    </button>
+                                </div>
+                            </div>
+                            <div className="md:w-1/2 mt-12 md:mt-0 flex justify-center w-full px-4 md:px-0">
+                                {/* GDP Dashboard Widget */}
+                                <div className="w-full max-w-lg bg-slate-800/80 backdrop-blur-md border border-slate-700/50 rounded-2xl p-6 shadow-2xl relative group">
+                                    <div className="absolute -inset-1 bg-gradient-to-r from-amber-500 to-amber-600 rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
+                                    
+                                    <div className="relative">
+                                        <div className="flex justify-between items-start mb-6">
+                                            <div>
+                                                <h3 className="text-xl font-bold text-white mb-1">India's GDP Growth</h3>
+                                                <p className="text-slate-400 text-xs uppercase tracking-wider">Economic Trajectory (Trillion INR)</p>
+                                            </div>
+                                            <div className="bg-emerald-500/20 text-emerald-400 px-3 py-1 rounded-full text-xs font-bold flex items-center border border-emerald-500/30">
+                                                <i className="fa-solid fa-arrow-trend-up mr-1.5"></i> +7.2% YoY
+                                            </div>
+                                        </div>
+
+                                        <div className="relative h-48 w-full mt-6">
+                                            {/* Grid lines */}
+                                            <div className="absolute inset-0 flex flex-col justify-between">
+                                                {[...Array(5)].map((_, i) => (
+                                                    <div key={i} className="border-b border-slate-700/50 w-full h-0"></div>
+                                                ))}
+                                            </div>
+                                            
+                                            {/* SVG Chart */}
+                                            <svg className="absolute inset-0 w-full h-full overflow-visible" preserveAspectRatio="none" viewBox="0 0 400 200">
+                                                <defs>
+                                                    <linearGradient id="gdp-gradient" x1="0" y1="0" x2="0" y2="1">
+                                                        <stop offset="0%" stopColor="#f59e0b" stopOpacity="0.4" />
+                                                        <stop offset="100%" stopColor="#f59e0b" stopOpacity="0.0" />
+                                                    </linearGradient>
+                                                </defs>
+                                                <path 
+                                                    d="M 0,200 L 0,160 L 80,140 L 160,120 L 240,100 L 320,70 L 400,40 L 400,200 Z" 
+                                                    fill="url(#gdp-gradient)" 
+                                                    className="animate-in fade-in duration-1000"
+                                                />
+                                                <path 
+                                                    d="M 0,160 L 80,140 L 160,120 L 240,100 L 320,70 L 400,40" 
+                                                    fill="none" 
+                                                    stroke="#f59e0b" 
+                                                    strokeWidth="3" 
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                />
+                                                <circle cx="0" cy="160" r="4" fill="#1e293b" stroke="#f59e0b" strokeWidth="2" />
+                                                <circle cx="80" cy="140" r="4" fill="#1e293b" stroke="#f59e0b" strokeWidth="2" />
+                                                <circle cx="160" cy="120" r="4" fill="#1e293b" stroke="#f59e0b" strokeWidth="2" />
+                                                <circle cx="240" cy="100" r="4" fill="#1e293b" stroke="#f59e0b" strokeWidth="2" />
+                                                <circle cx="320" cy="70" r="4" fill="#1e293b" stroke="#f59e0b" strokeWidth="2" />
+                                                
+                                                {/* Final Point */}
+                                                <circle cx="400" cy="40" r="6" fill="#f59e0b" />
+                                                <circle cx="400" cy="40" r="14" fill="#f59e0b" className="animate-ping opacity-30" style={{ animationDuration: '3s' }} />
+                                            </svg>
+
+                                            {/* Floating Stat Card for current/projected year */}
+                                            <div className="absolute right-0 top-0 transform translate-x-2 -translate-y-8 bg-white text-slate-900 px-4 py-2.5 rounded-lg shadow-xl border border-slate-200 z-10">
+                                                <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">2026 Target</div>
+                                                <div className="text-xl font-black text-slate-900 leading-none">₹375T+</div>
+                                            </div>
+                                        </div>
+
+                                        {/* X-axis labels */}
+                                        <div className="flex justify-between text-[10px] sm:text-xs text-slate-400 mt-4 font-semibold px-1">
+                                            <span>2021</span>
+                                            <span>2022</span>
+                                            <span>2023</span>
+                                            <span>2024</span>
+                                            <span>2025</span>
+                                            <span className="text-amber-400">2026(E)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* Client Logos */}
+                    <section className="py-10 bg-white border-b border-slate-100">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <p className="text-center text-sm font-semibold text-slate-500 uppercase tracking-wider mb-8">Trusted by innovative startups and enterprises</p>
+                            <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-60">
+                                {[1, 2, 3, 4, 5, 6, 7, 8].map((num) => (
+                                    <img 
+                                        key={num} 
+                                        src={`img/logo-${num}.png`} 
+                                        alt={`Client Partner ${num}`} 
+                                        loading="lazy"
+                                        className="h-10 md:h-12 object-contain grayscale hover:grayscale-0 transition-all duration-300"
+                                        onError={(e) => e.target.style.display = 'none'}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* Services Overview */}
+                    <section className="py-20 bg-slate-50">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <div className="text-center max-w-3xl mx-auto mb-16">
+                                <h2 className="text-amber-600 font-bold tracking-wider uppercase text-sm mb-2">Practice Areas</h2>
+                                <h3 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-4">Comprehensive Corporate Solutions</h3>
+                                <p className="text-slate-600 text-lg">We provide end-to-end financial and legal services tailored for the dynamic Indian regulatory environment.</p>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                                {/* Service 1 */}
+                                <div className="bg-white p-8 rounded-xl shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
+                                    <div className="w-14 h-14 bg-amber-50 text-amber-600 rounded-lg flex items-center justify-center mb-6 group-hover:bg-amber-500 group-hover:text-white transition-colors">
+                                        <i className="fa-solid fa-lightbulb text-2xl"></i>
+                                    </div>
+                                    <h4 className="text-xl font-bold text-slate-900 mb-3">Startup Consultancy</h4>
+                                    <p className="text-slate-600 mb-6 line-clamp-3">
+                                        Company incorporation (Pvt Ltd, LLP), Startup India (DIPP) registration, seed funding compliance, and virtual CFO services to accelerate your growth.
+                                    </p>
+                                    <button onClick={() => navigateTo('services')} className="text-amber-600 font-semibold flex items-center group-hover:text-amber-700">
+                                        Learn more <i className="fa-solid fa-chevron-right ml-1 text-sm"></i>
+                                    </button>
+                                </div>
+
+                                {/* Service 2 */}
+                                <div className="bg-white p-8 rounded-xl shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
+                                    <div className="w-14 h-14 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center mb-6 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                                        <i className="fa-solid fa-calculator text-2xl"></i>
+                                    </div>
+                                    <h4 className="text-xl font-bold text-slate-900 mb-3">Taxation (Direct & Indirect)</h4>
+                                    <p className="text-slate-600 mb-6 line-clamp-3">
+                                        Strategic tax planning, meticulous Income Tax & GST return filing, TDS compliance, and representation before Indian tax authorities.
+                                    </p>
+                                    <button onClick={() => navigateTo('services')} className="text-blue-600 font-semibold flex items-center group-hover:text-blue-700">
+                                        Learn more <i className="fa-solid fa-chevron-right ml-1 text-sm"></i>
+                                    </button>
+                                </div>
+
+                                {/* Service 3 */}
+                                <div className="bg-white p-8 rounded-xl shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
+                                    <div className="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center mb-6 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+                                        <i className="fa-solid fa-scale-balanced text-2xl"></i>
+                                    </div>
+                                    <h4 className="text-xl font-bold text-slate-900 mb-3">Legal & ROC Compliance</h4>
+                                    <p className="text-slate-600 mb-6 line-clamp-3">
+                                        Annual ROC filings, FEMA/RBI compliances, Trademark registrations, drafting of commercial agreements, and statutory audits.
+                                    </p>
+                                    <button onClick={() => navigateTo('services')} className="text-emerald-600 font-semibold flex items-center group-hover:text-emerald-700">
+                                        Learn more <i className="fa-solid fa-chevron-right ml-1 text-sm"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* Trust Section */}
+                    <section className="py-20 bg-white border-y border-slate-100">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                                <div>
+                                    <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-6">Why Modern Businesses Choose CA Anil K. Verma & Associates</h2>
+                                    <p className="text-lg text-slate-600 mb-8">
+                                        We blend the rigor of traditional accounting with modern, technology-driven processes. Our international perspective combined with deep-rooted Indian legal expertise makes us the ideal partner for your business journey.
+                                    </p>
+                                    <div className="space-y-4">
+                                        {[
+                                            "100% Data Confidentiality & Bank-grade Security",
+                                            "Proactive Tax Planning & Compliance Updates",
+                                            "Dedicated Relationship Manager for Every Client",
+                                            "Transparent Pricing & No Hidden Fees"
+                                        ].map((feature, idx) => (
+                                            <div key={idx} className="flex items-center">
+                                                <i className="fa-solid fa-circle-check text-amber-500 mr-3 text-xl shrink-0"></i>
+                                                <span className="text-slate-700 font-medium">{feature}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="bg-slate-50 p-8 rounded-xl border border-slate-100 text-center">
+                                        <div className="text-4xl font-black text-slate-900 mb-2">500+</div>
+                                        <div className="text-slate-600 font-medium">Happy Clients</div>
+                                    </div>
+                                    <div className="bg-slate-50 p-8 rounded-xl border border-slate-100 text-center mt-8">
+                                        <div className="text-4xl font-black text-slate-900 mb-2">25+</div>
+                                        <div className="text-slate-600 font-medium">Years Experience</div>
+                                    </div>
+                                    <div className="bg-slate-50 p-8 rounded-xl border border-slate-100 text-center">
+                                        <div className="text-4xl font-black text-slate-900 mb-2">₹500Cr+</div>
+                                        <div className="text-slate-600 font-medium">Assets Advised</div>
+                                    </div>
+                                    <div className="bg-amber-50 p-8 rounded-xl border border-amber-100 text-center mt-8">
+                                        <div className="text-4xl font-black text-amber-600 mb-2">92%</div>
+                                        <div className="text-amber-800 font-medium">Retention Rate</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* Testimonials Section */}
+                    <section className="py-20 bg-slate-50 border-t border-slate-200">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <div className="text-center max-w-3xl mx-auto mb-16">
+                                <h2 className="text-amber-600 font-bold tracking-wider uppercase text-sm mb-2">Testimonials</h2>
+                                <h3 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-4">What Our Clients Say</h3>
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                                {[
+                                    { id: 1, name: "Rahul Sharma", role: "Founder, TechStartup", quote: "CA Anil K. Verma & Associates made our incorporation and first-year compliance completely hassle-free." },
+                                    { id: 2, name: "Priya Desai", role: "Director, E-commerce Firm", quote: "Their GST consultation saved us thousands in penalties. Highly professional and responsive." },
+                                    { id: 3, name: "Amit Patel", role: "CEO, Manufacturing Unit", quote: "Having them as our Virtual CFO has fundamentally changed how we manage our cash flows." },
+                                    { id: 4, name: "Sneha Gupta", role: "Managing Partner", quote: "The best CA firm we have worked with. They truly understand the modern Indian business landscape." }
+                                ].map((testimonial) => (
+                                    <div key={testimonial.id} className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 relative">
+                                        <div className="text-amber-500 absolute top-6 right-6 opacity-10">
+                                            <i className="fa-solid fa-file-lines text-5xl"></i>
+                                        </div>
+                                        <p className="text-slate-600 text-sm mb-6 relative z-10 italic">"{testimonial.quote}"</p>
+                                        <div className="flex items-center">
+                                            <img 
+                                                src={`img/testimonial-${testimonial.id}.jpg`} 
+                                                alt={testimonial.name} 
+                                                loading="lazy"
+                                                className="w-12 h-12 rounded-full object-cover mr-4 border-2 border-slate-100"
+                                                onError={(e) => {
+                                                    e.target.onerror = null;
+                                                    e.target.src = "https://ui-avatars.com/api/?name=" + testimonial.name + "&background=f59e0b&color=fff";
+                                                }}
+                                            />
+                                            <div>
+                                                <div className="font-bold text-slate-900 text-sm">{testimonial.name}</div>
+                                                <div className="text-xs text-slate-500">{testimonial.role}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            );
+        }
+
+        function AboutPage({ navigateTo }) {
+            return (
+                <div className="animate-in pb-20">
+                    <div className="bg-slate-900 py-20 text-center">
+                        <h1 className="text-4xl font-bold text-white mb-4">About CA Anil K. Verma & Associates</h1>
+                        <p className="text-xl text-slate-400 max-w-2xl mx-auto px-4">
+                            Redefining professional accounting and legal advisory in India.
+                        </p>
+                    </div>
+                    
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-20">
+                            <div className="flex flex-col justify-center h-full">
+                                <h2 className="text-3xl font-bold text-slate-900 mb-6">Our Vision</h2>
+                                <p className="text-slate-600 text-lg mb-4 leading-relaxed">
+                                    At CA Anil K. Verma & Associates, we believe that world-class financial and legal advice should be accessible, transparent, and technology-driven. Founded with the mission to simplify doing business in India, we have grown into a trusted partner for startups, SMEs, and large enterprises.
+                                </p>
+                                <p className="text-slate-600 text-lg leading-relaxed">
+                                    Our team of seasoned Chartered Accountants, Company Secretaries, and Legal Professionals work collaboratively to ensure your business remains compliant, profitable, and ready for scale. We bridge the gap between complex Indian taxation laws and your business objectives.
+                                </p>
+                            </div>
+                            
+                            {/* Right Side: Graph Infographic */}
+                            <div className="relative h-full w-full min-h-[400px]">
+                                <div className="bg-white p-8 rounded-2xl shadow-xl border border-slate-100 relative overflow-hidden h-full flex flex-col justify-center">
+                                    {/* Background decorative blurs */}
+                                    <div className="absolute -right-10 -top-10 w-40 h-40 bg-amber-500 opacity-10 rounded-full blur-3xl"></div>
+                                    <div className="absolute -left-10 -bottom-10 w-40 h-40 bg-blue-500 opacity-10 rounded-full blur-3xl"></div>
+
+                                    <div className="relative z-10 mb-8 text-center">
+                                        <h3 className="text-2xl font-bold text-slate-900">Empowering Growth</h3>
+                                        <p className="text-sm text-slate-500 mt-1">Data-driven advisory & compliance</p>
+                                    </div>
+
+                                    {/* Main Bar Chart */}
+                                    <div className="relative z-10 bg-slate-50 p-6 rounded-xl border border-slate-100 mb-6">
+                                        <div className="flex justify-between items-end h-32 gap-3 border-b border-slate-200 pb-2">
+                                            <div className="w-full bg-slate-200 rounded-t-md h-[30%] relative group transition-all duration-500 hover:bg-slate-300"></div>
+                                            <div className="w-full bg-slate-200 rounded-t-md h-[45%] relative group transition-all duration-500 hover:bg-slate-300"></div>
+                                            <div className="w-full bg-amber-300 rounded-t-md h-[65%] relative group transition-all duration-500 hover:bg-amber-400"></div>
+                                            <div className="w-full bg-amber-400 rounded-t-md h-[80%] relative group transition-all duration-500 hover:bg-amber-500"></div>
+                                            <div className="w-full bg-amber-500 rounded-t-md h-[100%] relative group transition-all duration-500 shadow-md">
+                                                <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white text-xs py-1 px-2 rounded opacity-100 transition-opacity whitespace-nowrap shadow-lg">Target Reached</div>
+                                            </div>
+                                        </div>
+                                        <div className="flex justify-between text-xs text-slate-400 mt-3 font-semibold uppercase tracking-wider">
+                                            <span>2022</span><span>2023</span><span>2024</span><span>2025</span><span>2026</span>
+                                        </div>
+                                    </div>
+
+                                    {/* Mini Stats with SVG Graphs */}
+                                    <div className="grid grid-cols-2 gap-4 relative z-10">
+                                        <div className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm flex flex-col justify-between">
+                                            <div className="flex items-center justify-between mb-2">
+                                                <span className="text-xs text-slate-500 font-semibold uppercase">Tax Savings</span>
+                                                <i className="fa-solid fa-arrow-trend-up text-emerald-500 bg-emerald-50 p-1.5 rounded-full"></i>
+                                            </div>
+                                            <div className="text-xl font-black text-slate-900 mt-2">+34%</div>
+                                            {/* Mini SVG line graph */}
+                                            <svg className="w-full h-8 mt-2" viewBox="0 0 100 30" preserveAspectRatio="none">
+                                                <path d="M0,25 Q20,20 40,25 T80,10 T100,5" fill="none" stroke="#10b981" strokeWidth="3" strokeLinecap="round" />
+                                                <path d="M0,25 Q20,20 40,25 T80,10 T100,5 L100,30 L0,30 Z" fill="rgba(16, 185, 129, 0.1)" stroke="none" />
+                                            </svg>
+                                        </div>
+                                        <div className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm flex flex-col justify-between">
+                                            <div className="flex items-center justify-between mb-2">
+                                                <span className="text-xs text-slate-500 font-semibold uppercase">Compliance</span>
+                                                <i className="fa-solid fa-shield-halved text-blue-500 bg-blue-50 p-1.5 rounded-full"></i>
+                                            </div>
+                                            <div className="text-xl font-black text-slate-900 mt-2">100%</div>
+                                            {/* Mini SVG line graph */}
+                                            <svg className="w-full h-8 mt-2" viewBox="0 0 100 30" preserveAspectRatio="none">
+                                                <path d="M0,15 L20,15 L40,10 L60,15 L80,5 L100,5" fill="none" stroke="#3b82f6" strokeWidth="3" strokeLinecap="round" />
+                                                <path d="M0,15 L20,15 L40,10 L60,15 L80,5 L100,5 L100,30 L0,30 Z" fill="rgba(59, 130, 246, 0.1)" stroke="none" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="bg-white p-10 rounded-2xl shadow-sm border border-slate-100 text-center mb-16">
+                            <h2 className="text-2xl font-bold text-slate-900 mb-8">Our Core Values</h2>
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
+                                <div>
+                                    <div className="w-16 h-16 mx-auto bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mb-4">
+                                        <i className="fa-solid fa-shield-halved text-2xl"></i>
+                                    </div>
+                                    <h3 className="text-xl font-bold text-slate-900 mb-2">Integrity</h3>
+                                    <p className="text-slate-600">Uncompromising ethical standards in all our client engagements and reporting.</p>
+                                </div>
+                                <div>
+                                    <div className="w-16 h-16 mx-auto bg-amber-50 text-amber-600 rounded-full flex items-center justify-center mb-4">
+                                        <i className="fa-solid fa-arrow-trend-up text-2xl"></i>
+                                    </div>
+                                    <h3 className="text-xl font-bold text-slate-900 mb-2">Excellence</h3>
+                                    <p className="text-slate-600">Delivering accurate, timely, and strategic advice that drives tangible business growth.</p>
+                                </div>
+                                <div>
+                                    <div className="w-16 h-16 mx-auto bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mb-4">
+                                        <i className="fa-solid fa-users text-2xl"></i>
+                                    </div>
+                                    <h3 className="text-xl font-bold text-slate-900 mb-2">Client-Centric</h3>
+                                    <p className="text-slate-600">Your success is our priority. We offer personalized solutions tailored to your unique challenges.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* CTA Section */}
+                        <div className="bg-slate-900 rounded-2xl p-8 md:p-12 text-center shadow-2xl relative overflow-hidden">
+                            <div className="absolute inset-0 bg-[url('img/shape-bottom.png')] opacity-10 bg-cover bg-no-repeat bg-bottom" loading="lazy"></div>
+                            <div className="relative z-10">
+                                <h2 className="text-3xl font-bold text-white mb-4">Ready to Simplify Your Financial Journey?</h2>
+                                <p className="text-lg text-slate-300 max-w-2xl mx-auto mb-8">Partner with CA Anil K. Verma & Associates. Let our experts handle your taxation, legal, and growth compliances while you focus on scaling your business.</p>
+                                <a href="mailto:ca.akvandassociates@gmail.com" className="bg-amber-500 hover:bg-amber-600 text-white font-bold px-8 py-4 rounded-lg transition-colors shadow-lg flex items-center justify-center mx-auto w-max group">
+                                    Email Us Now <i className="fa-solid fa-envelope ml-2 group-hover:scale-110 transition-transform"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        function ServicesPage({ navigateTo }) {
+            const services = [
+                {
+                    icon: "fa-solid fa-lightbulb",
+                    title: "Startup & Incorporation",
+                    desc: "Complete registration services to launch your business legally and securely.",
+                    list: ["Private Limited / LLP / OPC Registration", "Startup India (DIPP) Recognition", "MSME / Udyam Registration", "Founders' Agreement Drafting"]
+                },
+                {
+                    icon: "fa-solid fa-calculator",
+                    title: "Taxation (Direct & Indirect)",
+                    desc: "End-to-end tax management minimizing liabilities within the legal framework.",
+                    list: ["GST Registration & Monthly Filings", "Income Tax Returns (Corporate & Individual)", "TDS/TCS Returns & Compliance", "Tax Assessment Representation"]
+                },
+                {
+                    icon: "fa-solid fa-scale-balanced",
+                    title: "Legal & ROC Compliances",
+                    desc: "Keeping your corporate governance pristine and penalty-free.",
+                    list: ["Annual ROC Filings", "Director KYC & Changes", "Trademark & Copyright Registration", "FEMA & RBI Compliance"]
+                },
+                {
+                    icon: "fa-solid fa-file-lines",
+                    title: "Audit & Assurance",
+                    desc: "Independent, rigorous audits that build stakeholder trust.",
+                    list: ["Statutory Audit under Companies Act", "Tax Audit under Income Tax Act", "GST Audit", "Internal & Management Audits"]
+                },
+                {
+                    icon: "fa-solid fa-briefcase",
+                    title: "Virtual CFO",
+                    desc: "Strategic financial leadership without the full-time executive cost.",
+                    list: ["Cash Flow Management", "Financial Modeling & Budgeting", "MIS Reporting & KPI Tracking", "Investor Pitch Deck Financials"]
+                },
+                {
+                    icon: "fa-solid fa-landmark",
+                    title: "Advisory & Funding",
+                    desc: "Expert guidance for navigating capital markets and restructuring.",
+                    list: ["Business Valuation (Registered Valuer)", "Due Diligence", "Mergers & Acquisitions Structuring", "Debt & Equity Syndication Support"]
+                }
+            ];
+
+            return (
+                <div className="animate-in pb-20 bg-slate-50">
+                    <div className="bg-slate-900 py-20 text-center">
+                        <h1 className="text-4xl font-bold text-white mb-4">Our Services</h1>
+                        <p className="text-xl text-slate-400 max-w-2xl mx-auto px-4">
+                            Specialized expertise for startups, SMEs, and large corporations.
+                        </p>
+                    </div>
+
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            {services.map((srv, idx) => (
+                                <div key={idx} className="bg-white p-8 rounded-xl shadow-sm border border-slate-200 hover:shadow-lg transition-all duration-300">
+                                    <div className="w-14 h-14 bg-slate-900 text-amber-500 rounded-lg flex items-center justify-center mb-6">
+                                        <i className={`${srv.icon} text-2xl`}></i>
+                                    </div>
+                                    <h3 className="text-2xl font-bold text-slate-900 mb-3">{srv.title}</h3>
+                                    <p className="text-slate-600 mb-6 h-12">{srv.desc}</p>
+                                    <ul className="space-y-3">
+                                        {srv.list.map((item, i) => (
+                                            <li key={i} className="flex items-start text-sm text-slate-700">
+                                                <i className="fa-solid fa-circle-check text-amber-500 mr-2 mt-1"></i>
+                                                <span>{item}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* CTA Section */}
+                        <div className="mt-20 bg-amber-50 rounded-2xl p-8 md:p-12 text-center border border-amber-100 shadow-sm relative overflow-hidden">
+                            <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500 opacity-5 rounded-full -mr-10 -mt-10"></div>
+                            <div className="absolute bottom-0 left-0 w-32 h-32 bg-blue-500 opacity-5 rounded-full -ml-10 -mb-10"></div>
+                            <h2 className="text-3xl font-bold text-slate-900 mb-4 relative z-10">Need a Customized Strategy?</h2>
+                            <p className="text-lg text-slate-600 max-w-2xl mx-auto mb-8 relative z-10">Every business is unique. Schedule a consultation with our experts to discuss how our specialized services can be tailored to fit your specific operational and regulatory needs.</p>
+                            <a href="tel:+919417121061" className="bg-slate-900 hover:bg-slate-800 text-white font-bold px-8 py-4 rounded-lg transition-colors shadow-lg flex items-center justify-center mx-auto w-max group relative z-10">
+                                TalkToCA Now <i className="fa-solid fa-phone ml-2 group-hover:scale-110 transition-transform"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        function CareerPage() {
+            return (
+                <div className="animate-in pb-20">
+                    <div className="bg-slate-900 py-20 text-center">
+                        <h1 className="text-4xl font-bold text-white mb-4">Build Your Career With Us</h1>
+                        <p className="text-xl text-slate-400 max-w-2xl mx-auto px-4">
+                            Join a team of forward-thinking financial professionals.
+                        </p>
+                    </div>
+                    
+                    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-16 text-center">
+                        <i className="fa-solid fa-award text-6xl text-amber-500 mb-6 block"></i>
+                        <h2 className="text-3xl font-bold text-slate-900 mb-6">Why Work at CA Anil K. Verma & Associates?</h2>
+                        <p className="text-lg text-slate-600 mb-12">
+                            We offer a dynamic, technology-driven environment where continuous learning is celebrated. Whether you are an experienced Chartered Accountant or an aspiring article assistant, CA Anil K. Verma & Associates provides the platform to work on diverse, challenging portfolios including fast-growing startups and established MNCs.
+                        </p>
+
+                        <div className="text-left bg-white p-8 rounded-xl border border-slate-200 shadow-sm mb-8">
+                            <h3 className="text-xl font-bold text-slate-900 mb-4">Current Openings</h3>
+                            
+                            <div className="space-y-6">
+                                <div className="border-b border-slate-100 pb-6">
+                                    <div className="flex justify-between items-start mb-2">
+                                        <h4 className="text-lg font-bold text-amber-600">Senior Tax Consultant (Direct Tax)</h4>
+                                        <span className="bg-slate-100 text-slate-600 px-3 py-1 rounded text-xs font-semibold">Full-Time</span>
+                                    </div>
+                                    <p className="text-slate-600 text-sm mb-3">Location: Chandigarh | Experience: 3-5 Years post-qualification</p>
+                                    <a href="mailto:ca.akvandassociates@gmail.com" className="text-sm font-semibold text-slate-900 underline hover:text-amber-600">Apply Now</a>
+                                </div>
+
+                                <div className="border-b border-slate-100 pb-6">
+                                    <div className="flex justify-between items-start mb-2">
+                                        <h4 className="text-lg font-bold text-amber-600">Article Assistant (CA Inter Cleared)</h4>
+                                        <span className="bg-slate-100 text-slate-600 px-3 py-1 rounded text-xs font-semibold">Articleship</span>
+                                    </div>
+                                    <p className="text-slate-600 text-sm mb-3">Location: Chandigarh | Stipend: As per industry standards</p>
+                                    <a href="mailto:ca.akvandassociates@gmail.com" className="text-sm font-semibold text-slate-900 underline hover:text-amber-600">Apply Now</a>
+                                </div>
+                            </div>
+                            
+                            <div className="mt-8 bg-slate-50 p-6 rounded-lg text-center">
+                                <p className="text-slate-700 font-medium mb-2">Don't see a role that fits?</p>
+                                <p className="text-sm text-slate-500 mb-4">Send your resume to <a href="mailto:ca.akvandassociates@gmail.com" className="text-amber-600 font-bold">ca.akvandassociates@gmail.com</a> and we'll keep you in mind for future opportunities.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        function BlogPage() {
+            const posts = [
+                {
+                    title: "New Faceless Assessment Guidelines for Delhi NCR Taxpayers",
+                    category: "Income Tax",
+                    date: "May 15, 2026",
+                    excerpt: "Understanding the latest circulars on faceless assessments and what it means for corporate entities and high net-worth individuals in the Delhi NCR region. This detailed guide covers the procedural changes, documentation requirements, and steps to navigate the new system efficiently.",
+                    url: "https://www.incometax.gov.in/iec/foportal/"
+                },
+                {
+                    title: "GST Rate Revisions on Agricultural Equipment in Punjab & Chandigarh",
+                    category: "GST",
+                    date: "May 10, 2026",
+                    excerpt: "A breakdown of the recent GST council decisions impacting agro-based businesses, machinery manufacturers, and distributors in Punjab and Chandigarh. Learn how these rate changes affect your input tax credit calculations and overall pricing strategy.",
+                    url: "https://services.gst.gov.in/services/gstlaw/gstlawlist"
+                },
+                {
+                    title: "Haryana Tech Startups: Claiming Seed Fund Under Startup India",
+                    category: "Startup",
+                    date: "May 02, 2026",
+                    excerpt: "Step-by-step guide for IT and manufacturing startups in Gurgaon and Haryana to leverage the Startup India Seed Fund Scheme. We explore the eligibility criteria, the application process through the official portal, and how to prepare your pitch for incubator committees.",
+                    url: "https://www.startupindia.gov.in/"
+                },
+                {
+                    title: "Udyam Registration Simplified for Manufacturing MSMEs in Uttar Pradesh",
+                    category: "MSME",
+                    date: "April 28, 2026",
+                    excerpt: "Analyzing the new digitized portal updates for faster MSME registration and subsequent subsidy claims for UP-based manufacturing hubs. Discover the benefits of timely registration, including easier access to credit and protection against delayed payments.",
+                    url: "https://msme.gov.in/"
+                },
+                {
+                    title: "Tax Exemptions for Tourism Businesses in Uttarakhand: What You Need to Know",
+                    category: "Income Tax",
+                    date: "April 20, 2026",
+                    excerpt: "Detailed overview of direct tax holidays and depreciation benefits available for hospitality and eco-tourism enterprises expanding in Uttarakhand. We outline the specific sections of the Income Tax Act that apply and the compliance needed to maintain these exemptions.",
+                    url: "https://www.incometax.gov.in/iec/foportal/"
+                },
+                {
+                    title: "Navigating E-Way Bill Compliance for Goods Movement in Jammu & Kashmir",
+                    category: "GST",
+                    date: "April 15, 2026",
+                    excerpt: "Clarifications on intra-state and inter-state e-way bill generation rules for transporters and businesses operating in Jammu & Kashmir. This article addresses common issues faced due to connectivity challenges and the legal safeguards available under the GST framework.",
+                    url: "https://services.gst.gov.in/services/gstlaw/gstlawlist"
+                },
+                {
+                    title: "Eco-Tourism Startups in Himachal Pradesh: Startup India Benefits",
+                    category: "Startup",
+                    date: "April 08, 2026",
+                    excerpt: "How sustainable and eco-friendly startups in Himachal Pradesh can obtain DIPP recognition and avail 3-year tax exemptions. We provide a checklist of the required documents and explain the process of seeking certification from the Inter-Ministerial Board.",
+                    url: "https://www.startupindia.gov.in/"
+                },
+                {
+                    title: "Credit Guarantee Scheme Expansion for Agro-MSMEs in Punjab & Haryana",
+                    category: "MSME",
+                    date: "April 01, 2026",
+                    excerpt: "Exploring the expanded limits of CGTMSE for collateral-free loans to micro and small agricultural enterprises in Punjab and Haryana. Learn how to work with partner banks to secure funding for modernization and capacity expansion.",
+                    url: "https://msme.gov.in/"
+                },
+                {
+                    title: "Advance Tax Deadlines FY 2026-27: Checklist for Northern Region Corporates",
+                    category: "Income Tax",
+                    date: "March 25, 2026",
+                    excerpt: "Crucial advance tax calculation methods and penalty avoidance strategies for corporates operating across Northern India. This comprehensive checklist ensures you meet all quarterly payment milestones and accurately estimate your annual tax liability.",
+                    url: "https://www.incometax.gov.in/iec/foportal/"
+                },
+                {
+                    title: "Recent GST Appellate Tribunal Announcements Affecting Delhi NCR and UP",
+                    category: "GST",
+                    date: "March 18, 2026",
+                    excerpt: "Insights into the operationalization of new GSTAT benches in Delhi and UP, aiming to expedite pending GST disputes and appeals. We discuss the expected timeline for hearing cases, the jurisdiction of the new benches, and how businesses should prepare their legal strategies.",
+                    url: "https://services.gst.gov.in/services/gstlaw/gstlawlist"
+                }
+            ];
+
+            return (
+                <div className="animate-in pb-20 bg-slate-50 min-h-screen">
+                    <div className="bg-slate-900 py-20 text-center relative overflow-hidden">
+                        <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500 opacity-5 rounded-full -mr-20 -mt-20"></div>
+                        <h1 className="text-4xl font-bold text-white mb-4 relative z-10">Insights & Updates</h1>
+                        <p className="text-xl text-slate-400 max-w-2xl mx-auto px-4 mb-8 relative z-10">
+                            Latest news, regulatory updates, and expert opinions from our CAs.
+                        </p>
+                        <div className="relative z-10">
+                            <a href="mailto:ca.akvandassociates@gmail.com" className="inline-flex items-center bg-amber-500 hover:bg-amber-600 text-white font-bold px-6 py-3 rounded-lg transition-colors shadow-lg group">
+                                Have a query? Ask our Experts <i className="fa-solid fa-envelope ml-2 group-hover:scale-110 transition-transform"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            {posts.map((post, idx) => (
+                                <div key={idx} className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-lg transition-all duration-300 flex flex-col p-8">
+                                    <div className="flex justify-between items-center mb-4">
+                                        <span className="bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                                            {post.category}
+                                        </span>
+                                        <span className="text-slate-500 text-sm font-medium">{post.date}</span>
+                                    </div>
+                                    <h3 className="text-2xl font-bold text-slate-900 mb-4 leading-tight">{post.title}</h3>
+                                    <p className="text-slate-600 text-base mb-6 flex-grow leading-relaxed">{post.excerpt}</p>
+                                    <a href={post.url} target="_blank" rel="noopener noreferrer" className="text-amber-600 font-bold flex items-center hover:text-amber-700 mt-auto w-max group">
+                                        Read Official Guidelines <i className="fa-solid fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                                    </a>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        function ContactPage() {
+            return (
+                <div className="animate-in pb-20">
+                    <div className="bg-slate-900 py-20 text-center">
+                        <h1 className="text-4xl font-bold text-white mb-4">Contact Us</h1>
+                        <p className="text-xl text-slate-400 max-w-2xl mx-auto px-4">
+                            Get in touch with our experts for professional advisory.
+                        </p>
+                    </div>
+
+                    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-16 text-center">
+                        <h2 className="text-3xl font-bold text-slate-900 mb-6">Let's Discuss Your Business Needs</h2>
+                        <p className="text-lg text-slate-600 mb-12 max-w-3xl mx-auto">
+                            Whether you are looking to incorporate a new startup, need assistance with complex tax filings, or require a virtual CFO, our team is ready to help. Reach out to us directly via phone or email, or visit our office.
+                        </p>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                            <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center">
+                                <div className="w-16 h-16 bg-amber-50 text-amber-600 rounded-full flex items-center justify-center mb-6">
+                                    <i className="fa-solid fa-location-dot text-3xl"></i>
+                                </div>
+                                <h4 className="text-xl font-bold text-slate-900 mb-4">Head Office</h4>
+                                <p className="text-slate-600 text-center">CA Anil K. Verma & Associates<br/>SCO 118-19, 2nd Floor, Madhya Marg<br/>Sector 8C, Chandigarh</p>
+                            </div>
+                            
+                            <a href="tel:+919417121061" className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center hover:shadow-md transition-shadow group">
+                                <div className="w-16 h-16 bg-amber-50 text-amber-600 rounded-full flex items-center justify-center mb-6 group-hover:bg-amber-500 group-hover:text-white transition-colors">
+                                    <i className="fa-solid fa-phone text-3xl"></i>
+                                </div>
+                                <h4 className="text-xl font-bold text-slate-900 mb-4">Call Us</h4>
+                                <p className="text-slate-600 text-center">+91 9417121061<br/>0172 5061061<br/>Mon - Sat, 9:30 AM - 6:30 PM</p>
+                            </a>
+
+                            <a href="mailto:ca.akvandassociates@gmail.com" className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center hover:shadow-md transition-shadow group">
+                                <div className="w-16 h-16 bg-amber-50 text-amber-600 rounded-full flex items-center justify-center mb-6 group-hover:bg-amber-500 group-hover:text-white transition-colors">
+                                    <i className="fa-solid fa-envelope text-3xl"></i>
+                                </div>
+                                <h4 className="text-xl font-bold text-slate-900 mb-4">Email Us</h4>
+                                <p className="text-slate-600 text-center">ca.akvandassociates@gmail.com</p>
+                            </a>
+                        </div>
+
+                        {/* Google Maps Preview */}
+                        <div className="mt-12 relative rounded-2xl overflow-hidden shadow-md border border-slate-200 h-[400px] group">
+                            <iframe 
+                                src="https://maps.google.com/maps?q=SCO%20118-19,%202nd%20Floor,%20Madhya%20Marg,%20sector%208C,%20Chandigarh&t=&z=15&ie=UTF8&iwloc=&output=embed" 
+                                width="100%" 
+                                height="100%" 
+                                style={{border: 0}} 
+                                allowFullScreen="" 
+                                loading="lazy" 
+                                referrerPolicy="no-referrer-when-downgrade"
+                                className="absolute inset-0"
+                            ></iframe>
+                            <a href="https://maps.app.goo.gl/SA7YjTu5MTKeexag6" target="_blank" rel="noopener noreferrer" className="absolute inset-0 z-10 flex items-center justify-center bg-slate-900/10 hover:bg-slate-900/30 transition-all duration-300">
+                                <span className="opacity-0 group-hover:opacity-100 bg-white text-slate-900 font-bold px-6 py-3 rounded-lg shadow-xl flex items-center transition-opacity transform translate-y-4 group-hover:translate-y-0 duration-300">
+                                    <i className="fa-solid fa-map-location-dot mr-2 text-amber-500 text-xl"></i> Open in Google Maps
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Render the application
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
