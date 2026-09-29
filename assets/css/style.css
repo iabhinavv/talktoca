@@ -407,3 +407,84 @@ a.contact-card:hover .icon-round.teal{background:var(--teal);color:#fff}
 @media(prefers-reduced-motion:reduce){
   *{animation:none !important;transition:none !important;scroll-behavior:auto !important}
 }
+
+/* ---------- Footer button: .site-footer a was overriding the white label ---------- */
+.site-footer .btn-primary,.site-footer .btn-primary:hover{color:#fff}
+
+/* ---------- Practice areas: stacked folders ---------- */
+:root{interpolate-size:allow-keywords}
+.folders{padding-top:2.4rem}
+.folder{
+  --f-bg:#001f3f;--f-fg:#fff;--tab-x:3%;
+  position:relative;margin-top:-1rem;background:var(--f-bg);color:var(--f-fg);
+  border-radius:20px 20px 0 0;box-shadow:0 -12px 28px -14px rgba(0,20,40,.45);
+}
+.folder:first-child{margin-top:0}
+.folder:last-child{border-radius:20px}
+.folder:nth-child(2){--f-bg:#003366;--tab-x:18%}
+.folder:nth-child(3){--f-bg:#0a4480;--tab-x:33%}
+.folder:nth-child(4){--f-bg:#0c5a6e;--tab-x:48%}
+.folder:nth-child(5){--f-bg:#0f766e;--tab-x:63%}
+.folder:nth-child(6){--f-bg:#2dd4bf;--f-fg:#042f2e;--tab-x:77%}
+.folder summary{
+  list-style:none;display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  padding:2rem 1.25rem 3.75rem;cursor:pointer;
+}
+@media(min-width:768px){.folder summary{padding:2.25rem 2.5rem 3.75rem}}
+.folder summary::-webkit-details-marker{display:none}
+.folder-tab{
+  position:absolute;top:-2.2rem;left:var(--tab-x);height:2.25rem;padding:0 1.9rem;
+  display:flex;align-items:center;background:var(--f-bg);color:var(--f-fg);
+  font:600 .7rem/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.16em;text-transform:uppercase;
+  clip-path:polygon(14% 0,86% 0,100% 100%,0 100%);
+}
+@media(max-width:699px){.folder-tab{left:calc(1rem + (var(--tab-x) / 5))}}
+.folder h3{color:inherit;font-size:clamp(1.3rem,3vw,2.1rem);letter-spacing:-.02em}
+.folder-pill{
+  flex:none;border:1.5px solid currentColor;border-radius:999px;padding:.5rem 1.1rem;
+  font:600 .68rem/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.18em;text-transform:uppercase;
+  opacity:.75;transition:opacity .25s,background-color .25s;
+}
+.folder-pill::after{content:"Open"}
+.folder[open] .folder-pill::after{content:"Close"}
+.folder summary:hover .folder-pill{opacity:1;background-color:rgba(255,255,255,.12)}
+.folder-body{display:grid;gap:1.25rem 2.5rem;padding:0 1.25rem 4rem;opacity:0;transition:opacity .45s .1s}
+@media(min-width:768px){.folder-body{padding:0 2.5rem 4rem}}
+@media(min-width:900px){.folder-body{grid-template-columns:1.25fr 1fr .8fr}}
+.folder[open] .folder-body{opacity:1}
+.folder-body p{color:inherit;opacity:.9;margin:0}
+.folder-label{font:600 .68rem/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.18em;text-transform:uppercase;margin-bottom:.9rem !important;opacity:.7 !important}
+.folder-body ul{margin:0;padding-left:1.1rem}
+.folder-body li{margin-bottom:.5rem;font-weight:600}
+.folder-body a{color:inherit;font-weight:700;border-bottom:1px solid currentColor;padding-bottom:1px}
+.folder-body a:hover{color:inherit;opacity:.8}
+.folder::details-content{block-size:0;overflow:hidden;transition:block-size .5s cubic-bezier(.2,.7,.2,1),content-visibility .5s allow-discrete}
+.folder[open]::details-content{block-size:auto}
+
+/* ---------- Motion: gentle entrances, only for people who haven't asked for less ---------- */
+@media (prefers-reduced-motion:no-preference){
+  @keyframes rise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+  .hero-grid>*,.page-hero .wrap>*{animation:rise .9s cubic-bezier(.2,.7,.2,1) both}
+  .hero-grid>:nth-child(2),.page-hero .wrap>:nth-child(2){animation-delay:.15s}
+  .page-hero .wrap>:nth-child(3){animation-delay:.3s}
+  .reveal{opacity:0;transform:translateY(18px);transition:opacity .7s cubic-bezier(.2,.7,.2,1) var(--d,0s),transform .7s cubic-bezier(.2,.7,.2,1) var(--d,0s)}
+  .reveal.in{opacity:1;transform:none}
+  .card-link .ico,.btn .ico{transition:transform .25s}
+  .card-link:hover .ico,.btn:hover .ico{transform:translateX(4px)}
+  .btn{transition:background .2s,box-shadow .2s,transform .2s}
+  .btn:hover{transform:translateY(-1px)}
+  .faq details>div{animation:rise .4s ease both}
+}
+
+/* ---------- Mobile fixes (29 Sep 2026 audit) ---------- */
+/* Single-column article grid: let the column shrink so wide tables scroll inside
+   .table-scroll instead of stretching the page sideways. */
+.article-layout{grid-template-columns:minmax(0,1fr)}
+@media(min-width:1000px){.article-layout{grid-template-columns:minmax(0,1fr) 320px}}
+.prose{overflow-wrap:break-word}
+/* Small uppercase labels: 12px minimum for legibility on phones. */
+.stat-card .muted,.stat .lbl,.quote-role,.pill,.tag,.eyebrow-pill,.badge-up,.folder-tab,.folder-label{font-size:.75rem}
+/* "Read the guide" links: comfortable tap height. */
+.quote-role a{display:inline-block;padding:.7rem 0}
+/* Leave room so the floating Call button never covers the last lines of the footer. */
+@media(max-width:959px){.footer-bottom{padding-bottom:5.5rem}}
