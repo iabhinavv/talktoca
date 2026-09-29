@@ -12,11 +12,11 @@ higher standard than most. Please have someone in the firm confirm these:
 
 | # | Item | Where | Why |
 |---|------|-------|-----|
-| 1 | **Postal code `160009`** | `build.py` → `SITE["postal"]` | Used in the address schema Google reads. I inferred it for Sector 8C; confirm it matches your letterhead and Google Business Profile exactly. |
-| 2 | **Testimonials** | `pages_core.py` → `HOME_BODY` | The four names carried over from the old site read like placeholders. If they aren't real, remove them. I have deliberately **not** added `Review`/`AggregateRating` schema — fake or unverifiable review markup is a manual-action risk. |
-| 3 | **"500+ clients", "25+ years"** | `pages_core.py` | Carried over from the old site. Under the ICAI Code of Ethics, claims of this kind should be factual and substantiable. I removed "India's premier", "India's Trusted CA Firm", "₹500Cr+ assets advised" and "92% retention" rather than spread them across 18 pages. |
+| 1 | **Postal code `160009`** | every page — footer and the JSON-LD `postalCode` | Used in the address schema Google reads. I inferred it for Sector 8C; confirm it matches your letterhead and Google Business Profile exactly. |
+| 2 | **Testimonials** | — | Done: removed 29 Sep 2026 (ICAI does not permit testimonials). No `Review`/`AggregateRating` schema. |
+| 3 | **"500+ clients", "25+ years"** | — | Done: removed 29 Sep 2026 along with the other superlatives and success claims. |
 | 4 | **Statutory figures and dates** | service pages + blog | Listed individually in Part 5 below. |
-| 5 | **Firm details for schema** | `build.py` → `SITE` | Add ICAI firm registration number and any LinkedIn/Facebook URLs to `sameAs` when you have them. |
+| 5 | **Firm details** | footer, `/about/`, JSON-LD `sameAs` | FRN 019748N is in every footer; membership no. 097020 only on `/about/`. Add LinkedIn/Facebook URLs to `sameAs` when you have them. |
 
 ---
 
@@ -75,16 +75,42 @@ Test it after deploying: <https://search.google.com/test/rich-results>
 
 ### Editing the site later
 
-Content lives in `pages_core.py`, `pages_services.py` and `pages_blog.py`. Business
-details (address, phone, hours, coordinates) live in one place — `SITE` in `build.py`.
-Change what you need, then:
+The site is plain HTML — no build step. Each page is a folder with an `index.html`
+(`/about/` is `about/index.html`). Edit the file, commit, push; GitHub Pages serves it.
 
-```bash
-python3 build.py
-```
+The header, footer and structured-data block are **copied into every page**, so some
+changes have to be made in every file. Use your editor's "find in folder" / "replace
+in folder" for these:
 
-That regenerates all 18 pages, `sitemap.xml` and `robots.txt`. You can also edit the
-generated `.html` files directly — just know a rebuild overwrites them.
+| Change | Where it appears |
+|---|---|
+| Phone, email, address, hours | Every page: header (`tel:` links), footer, and the `<script type="application/ld+json">` block near the top |
+| Menu item | Every page: two `<nav>` blocks in the header (desktop and mobile) |
+| Footer links or text | Every page: `<footer class="site-footer">` |
+| FRN | Every page footer |
+| Membership number | `about/index.html` only |
+| Styling | `assets/css/style.css` only |
+
+**Adding a new blog article** (quickest: copy an existing article folder):
+
+1. Copy `blog/gst-notice-reply-guide/` to `blog/<new-slug>/`.
+2. In the new `index.html`, change: `<title>`, `meta description`, `canonical`,
+   `og:title`, `og:description`, `og:url`, `twitter:title`, `twitter:description`,
+   the breadcrumb last item, the `<h1>`, the date, the body, and the FAQ.
+3. In its JSON-LD block, update the `BlogPosting` (headline, description, url,
+   dates), the last `BreadcrumbList` item, and the `FAQPage` questions — they must
+   match the visible FAQ word for word. Remove `FAQPage` if the page has no FAQ.
+4. Add a card for it to `blog/index.html` (copy an existing `<article class="card">`)
+   and add it to the `blogPost` list in that page's JSON-LD.
+5. Add a `<url>` entry to `sitemap.xml` with today's date in `<lastmod>`.
+
+**When you edit an existing page,** update its `<lastmod>` in `sitemap.xml` (and
+`dateModified` in the JSON-LD for articles) so Google knows it changed.
+
+**Every January,** update the © year in the footer (find-and-replace `&copy; 2026` in every file).
+
+Check a page's structured data after any JSON-LD edit:
+<https://search.google.com/test/rich-results>
 
 ---
 
@@ -98,8 +124,7 @@ Push the contents of this folder to the repository that serves `talktoca.in`.
 > **Do not delete the `CNAME` file** in that repo — it is what maps the custom domain.
 > It isn't in this folder because this folder wasn't the git checkout.
 
-The `.py` files are harmless to commit (they're your source of truth) and are excluded
-in `robots.txt`. `.nojekyll` is included so GitHub Pages serves the files as-is.
+`.nojekyll` is included so GitHub Pages serves the files as-is.
 
 Confirm after deploy:
 
@@ -176,7 +201,7 @@ Consistent NAP across directories reinforces the local signal. Free and worth do
 - Yellow Pages India, TradeIndia
 - ICAI member/firm listing
 - Local Chandigarh business directories and the Chamber of Commerce
-- Facebook Page and LinkedIn Company Page (also fill `sameAs` in `build.py` once live)
+- Facebook Page and LinkedIn Company Page (also add them to `sameAs` in each page's JSON-LD once live)
 
 Same name, same address format, same phone number, every time.
 
@@ -241,8 +266,8 @@ demotes them. If you can't write 800 genuinely different words, don't make the p
 the tricity section already on `/chartered-accountant-in-chandigarh/` does the job.
 
 ### 7. Track what's actually happening
-- **Google Analytics 4** — add the tag to `PAGE_TEMPLATE` in `build.py` so it lands on
-  all 18 pages at once.
+- **Google Analytics 4** — paste the tag into the `<head>` of every page (replace-in-folder
+  on `</head>` works).
 - In Search Console, watch **Performance → Queries** monthly. The queries you're
   getting impressions for but few clicks tell you which titles to rewrite; the queries
   ranking 8–20 tell you which pages to expand.
@@ -283,8 +308,12 @@ What remains restricted, and why I wrote the content the way I did:
   "India's premier" — all removed).
 - Claims of fact should be **substantiable** (hence the flag on the client and years
   figures).
-- **Testimonials and endorsements** need care — check the current guidance before
-  keeping the four on the homepage.
+- **Testimonials and endorsements** are still not permitted — the four on the homepage were
+  removed on 29 Sep 2026 and replaced with a "common questions" block linking to articles.
+- **Reviews and directories:** asking clients for reviews can read as solicitation, and
+  reserved CA services (audit, tax audit) should not be listed on commercial aggregators
+  such as JustDial or Sulekha. Confirm with the ICAI Ethical Standards Board before either.
+- **"500+ clients" / "25+ years"** were removed. The ICAI FRN is in every page footer.
 
 Since this is your profession and the guidance was recently revised, please confirm the
 current position with the ICAI Ethical Standards Board or your branch before publishing.
@@ -308,7 +337,7 @@ but these appear explicitly:
 | ITR due 31 July / 31 Oct / 30 Nov; belated 31 Dec; tax audit report 30 Sept | income tax page |
 | TDS returns 31 Jul, 31 Oct, 31 Jan, 31 May | income tax page, blog |
 | AOC-4 within 30 days of AGM; MGT-7 within 60; ADT-1 within 15 | ROC page, compliance checklist article |
-| DIR-3 KYC 30 Sept; DPT-3 30 June; MSME-1 30 Apr and 31 Oct | ROC page, article |
+| DIR-3 KYC once every three years by 30 June (from 31 Mar 2026); DPT-3 30 June; MSME-1 30 Apr and 31 Oct | ROC page, article |
 | LLP Form 11 by 30 May; Form 8 by 30 October | ROC page, Pvt Ltd vs LLP article |
 | INC-20A within 180 days of incorporation | incorporation page, checklist article |
 | First auditor appointed within 30 days of incorporation | incorporation page, checklist |
@@ -325,26 +354,18 @@ throughout rather than quoted, given how often they move.
 
 ```
 talktoca/
-├── build.py               # builder: templates, meta tags, JSON-LD, sitemap, robots
-├── partials.py            # shared blocks (CTA, sidebar, schema helpers)
-├── pages_core.py          # home, about, services hub, local page, contact, careers
-├── pages_services.py      # the six service pages
-├── pages_blog.py          # blog index + five articles
-├── assets/css/style.css   # the whole design system, ~12 KB
-├── assets/js/site.js      # nav only, ~0.5 KB, deferred
+├── index.html             # homepage
+├── about/ services/ blog/ careers/ contact/ chartered-accountant-in-chandigarh/
+│                          # one index.html per page
+├── assets/css/style.css   # the whole design system
+├── assets/js/site.js      # mobile nav only, deferred
 ├── assets/img/            # og-image.png (1200×630), favicon.png (48×48)
-├── sitemap.xml            # generated — 18 URLs
-├── robots.txt             # generated
-├── 404.html               # generated
-├── .nojekyll              # tells GitHub Pages not to run Jekyll
-└── <page dirs>/index.html # generated
+├── assets/caakvlogo.png   # logo
+├── sitemap.xml            # 24 URLs — update by hand when pages change
+├── robots.txt
+├── 404.html               # GitHub Pages serves this for missing URLs
+└── .nojekyll              # tells GitHub Pages not to run Jekyll
 ```
 
-The original React `index.html` is backed up outside this folder; it is also in the
-git history of the Pages repo.
-
-To preview locally before pushing:
-
-```bash
-python3 -m http.server 4173 --directory /Users/abhinavverma/Downloads/Claude/talktoca
-```
+The Python generator used to build these pages was removed on 29 Sep 2026; its last
+committed version is in git history (commit 929c3f8) if ever needed.

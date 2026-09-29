@@ -2,11 +2,5 @@
 User-agent: *
 Allow: /
 
-# Nothing on this site is private; the whole thing is meant to be indexed.
-Disallow: /build.py
-Disallow: /partials.py
-Disallow: /pages_core.py
-Disallow: /pages_services.py
-Disallow: /pages_blog.py
 
 Sitemap: https://talktoca.in/sitemap.xml

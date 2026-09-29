@@ -2,9 +2,6 @@
 .DS_Store
 ._*
 
-# Python build artefacts
-__pycache__/
-*.pyc
 
 # Editors
 .vscode/
